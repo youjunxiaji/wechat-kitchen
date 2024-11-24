@@ -10,7 +10,7 @@ export const menuCategories: Category[] = [
                 name: '红烧肉',
                 price: 0.1,
                 originalPrice: 29,
-                image: '/static/dishes/home_meat/hongshaorou.jpg',
+                image: '/static/dishes/home_meat/hongshaorou.png',
                 category: '家常菜(荤)',
                 sold: 0
             },
@@ -19,7 +19,7 @@ export const menuCategories: Category[] = [
                 name: '鱼香肉丝',
                 price: 0.1,
                 originalPrice: 26,
-                image: '/static/dishes/home_meat/yuxiangrousi.jpg',
+                image: '/static/dishes/home_meat/yuxiangrousi.png',
                 category: '家常菜(荤)',
                 sold: 0
             }
@@ -85,4 +85,12 @@ export const menuCategories: Category[] = [
             }
         ]
     }
-] 
+]
+
+export const choiceCategories: Category[] = [
+    {
+        id: 'choice',
+        name: '精选',
+        items: []
+    }
+]

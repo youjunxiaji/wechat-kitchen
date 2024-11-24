@@ -2,16 +2,22 @@
   <view class="container">
     <!-- 店铺信息 -->
     <view class="shop-info">
-      <image class="shop-avatar" :src="shopInfo.avatar" />
+      <image
+        class="shop-avatar"
+        :src="shopInfo.avatar"
+      />
       <text class="shop-name">{{ shopInfo.name }}</text>
     </view>
 
     <!-- 菜品列表 -->
     <view class="menu-container">
       <!-- 左侧分类导航 -->
-      <scroll-view class="category-list" scroll-y>
-        <view 
-          v-for="(category, index) in categories" 
+      <scroll-view
+        class="category-list"
+        scroll-y
+      >
+        <view
+          v-for="(category, index) in categories"
           :key="category.id"
           :class="['category-item', currentCategory === index ? 'active' : '']"
           @tap="switchCategory(index)"
@@ -21,20 +27,37 @@
       </scroll-view>
 
       <!-- 右侧菜品列表 -->
-      <scroll-view class="food-list" scroll-y>
-        <view v-if="loading" class="loading">
+      <scroll-view
+        class="food-list"
+        scroll-y
+      >
+        <view
+          v-if="loading"
+          class="loading"
+        >
           <uni-load-more status="loading" />
         </view>
         <template v-else>
-          <view v-for="item in currentItems" :key="item.id" class="food-item">
-            <image class="food-image" :src="item.image" mode="aspectFill" />
+          <view
+            v-for="item in currentItems"
+            :key="item.id"
+            class="food-item"
+          >
+            <image
+              class="food-image"
+              :src="item.image"
+              mode="aspectFill"
+            />
             <view class="food-info">
               <text class="food-name">{{ item.name }}</text>
               <view class="price-container">
                 <text class="food-price">¥{{ item.price }}</text>
                 <text class="food-original-price">¥{{ item.originalPrice }}</text>
               </view>
-              <view class="add-btn" @tap="addToCart(item)">+</view>
+              <view
+                class="add-btn"
+                @tap="addToCart(item)"
+              >+</view>
             </view>
           </view>
         </template>
@@ -46,13 +69,13 @@
       <view class="total-price">
         合计: ¥{{ Number(totalPrice).toFixed(2) }}
       </view>
-      <view class="checkout-btn" @tap="goToCheckout">
+      <view
+        class="checkout-btn"
+        @tap="goToCheckout"
+      >
         去结算
       </view>
     </view>
-
-    <!-- 底部导航栏 -->
-    <TabBar />
   </view>
 </template>
 
@@ -60,8 +83,6 @@
 import { ref, computed, onMounted } from 'vue'
 import type { MenuItem, Category } from '@/types/menu'
 import { menuCategories } from '@/data/menuCategories'
-import TabBar from '@/components/TabBar.vue'
-
 const shopInfo = ref({
   name: 'LHappyi的私人小餐馆',
   avatar: '/static/shop-avatar.png'
@@ -224,7 +245,7 @@ onMounted(async () => {
 
 .cart-bar {
   position: fixed;
-  bottom: 100rpx;
+  bottom: 0;
   left: 0;
   right: 0;
   height: 100rpx;
