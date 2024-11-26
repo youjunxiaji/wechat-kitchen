@@ -34,7 +34,7 @@ export const menuCategories: Category[] = [
                 name: '青椒土豆丝',
                 price: 0.1,
                 originalPrice: 16,
-                image: '/static/dishes/home_veg/qingjiaotudou.jpg',
+                image: '/static/dishes/home_veg/qingjiaotudou.png',
                 category: '家常菜(素)',
                 sold: 0
             }

@@ -1,57 +1,96 @@
 <template>
   <div class="cart">
-    <div v-if="cartItems.length > 0" class="cart-items">
-      <div v-for="item in cartItems" :key="item.id" class="cart-item">
-        <image :src="item.image" class="item-image" />
+    <div
+      v-if="cartItems.length > 0"
+      class="cart-items"
+    >
+      <div
+        v-for="item in cartItems"
+        :key="item.id"
+        class="cart-item"
+      >
+        <image
+          :src="item.image"
+          class="item-image"
+        />
         <div class="item-info">
           <text class="item-name">{{ item.name }}</text>
           <text class="item-price">¥{{ item.price }}</text>
           <text class="item-quantity">x{{ item.quantity }}</text>
         </div>
       </div>
-      
+      <!-- DOM 结算栏 -->
       <div class="total-bar">
-        <text class="total-price">合计：¥{{ totalPrice }}</text>
-        <button class="clear-btn" @click="clearCart">清空</button>
+        <text class="total-price">合计：¥{{ totalPrice.toFixed(2) }}</text>
+        <button
+          class="clear-btn"
+          @click="clearCart"
+        >清空</button>
       </div>
     </div>
-    
-    <div v-else class="empty-cart">
+
+    <div
+      v-else
+      class="empty-cart"
+    >
       <text>购物车是空的</text>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 
 // 购物车数据
-const cartItems = ref<any[]>([])
+const cartItems = ref<CartItem[]>([])
+
+interface CartItem {
+  id: string,
+  name: string,
+  price: number,
+  quantity: number,
+  image: string,
+  originalPrice: number,
+  category: string,
+  sold: number
+}
 
 // 计算总价
 const totalPrice = computed(() => {
   return cartItems.value.reduce((total, item) => {
-    return total + item.price * item.quantity
+    return total + item.price
   }, 0)
 })
 
-// 从本地存储获取购物车数据
-onMounted(() => {
-  const storedCart = uni.getStorageSync('cartItems')
-  if (storedCart) {
-    cartItems.value = JSON.parse(storedCart)
-  }
-})
+// TITLE 购物车
+// FUNC 获取购物车数据的函数
+const loadCartItems = () => {
+  cartItems.value = []
+  const storage = uni.getStorageInfoSync()
+  const keys = storage.keys
+  keys.forEach(key => {
+    const value = uni.getStorageSync(key)
+    cartItems.value.push(value)
+  })
+}
 
-// 清空购物车
+// FUNC 清空购物车
 const clearCart = () => {
   cartItems.value = []
-  uni.setStorageSync('cartItems', '[]')
+  uni.clearStorageSync()
   uni.showToast({
     title: '购物车已清空',
     icon: 'success'
   })
 }
+
+// TITLE 切换界面执行的操作
+onShow(() => {
+  loadCartItems()
+})
+
+
 </script>
 
 <style scoped>
@@ -96,24 +135,34 @@ const clearCart = () => {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20rpx;
-  background: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.1);
+  padding: 10rpx 0;
+  background-color: #fff;
+  height: 100rpx;
+  border-top: 1rpx solid #f5f5f5;
+  box-shadow: none;
 }
 
 .total-price {
   font-size: 32rpx;
   color: #ff4400;
+  font-weight: bold;
+  margin-left: 30rpx;
 }
 
 .clear-btn {
   background: #ff4400;
   color: #fff;
-  padding: 20rpx 40rpx;
   border-radius: 40rpx;
+  width: 160rpx;
+  height: 70rpx;
+  font-size: 28rpx;
+  margin-right: 20rpx;
+  line-height: 70rpx;
+  text-align: center;
+  padding: 0;
 }
 
 .empty-cart {

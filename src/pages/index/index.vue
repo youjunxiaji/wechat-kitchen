@@ -35,7 +35,6 @@
           v-if="loading"
           class="loading"
         >
-          <uni-load-more status="loading" />
         </view>
         <template v-else>
           <view
@@ -63,18 +62,15 @@
         </template>
       </scroll-view>
     </view>
-
-    <!-- 购物车栏 -->
-    <view class="cart-bar">
-      <view class="total-price">
-        合计: ¥{{ Number(totalPrice).toFixed(2) }}
-      </view>
-      <view
-        class="checkout-btn"
-        @tap="goToCheckout"
-      >
-        去结算
-      </view>
+    <view>
+      <uni-fab
+        ref="fab"
+        :pattern="pattern"
+        :horizontal="horizontal"
+        :vertical="vertical"
+        :direction="direction"
+        @fabClick="fabClick"
+      />
     </view>
   </view>
 </template>
@@ -99,28 +95,41 @@ const totalPrice = computed(() => {
   return cartItems.value.reduce((total, item) => total + item.price, 0)
 })
 
-// 加载分类下的菜品
 const loadCategoryItems = async (index: number) => {
-  loading.value = true
-  try {
-    // 模拟网络请求延迟
-    await new Promise(resolve => setTimeout(resolve, 300))
-    currentItems.value = categories.value[index].items
-  } finally {
-    loading.value = false
-  }
+  // FUNC 加载分类下的菜品
+  currentItems.value = categories.value[index].items
 }
 
+// TITLE 悬浮按钮
+const horizontal = ref('right')
+const vertical = ref('bottom')
+const direction = ref('horizontal')
+const pattern = ref({
+  color: '#7A7E83',
+  backgroundColor: '#fff',
+  selectedColor: '#007AFF',
+  buttonColor: '#007AFF',
+  iconColor: '#fff',
+  icon: 'cart'
+})
+// FUNC 悬浮按钮点击事件
+const fabClick = () => {
+  uni.switchTab({
+    url: '/pages/cart/index'
+  })
+}
 // 切换分类
 const switchCategory = async (index: number) => {
-  if (currentCategory.value === index) return
+  if (currentCategory.value === index)
+    return
   currentCategory.value = index
   await loadCategoryItems(index)
 }
 
-// 添加到购物车
 const addToCart = (item: MenuItem) => {
-  cartItems.value.push(item)
+  // FUNC 添加到购物车
+  console.log('addToCart', item)
+  uni.setStorageSync(item.id, item)
 }
 
 // 去结算
